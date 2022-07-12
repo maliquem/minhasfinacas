@@ -1,4 +1,4 @@
-package com.jael.minhasfinacas.model.entity;
+package com.jael.minhasfinacas.model.enums;
 
 public enum StatusLancamento {
 
