@@ -4,12 +4,14 @@ import com.jael.minhasfinacas.exception.RegraNegocioException;
 import com.jael.minhasfinacas.model.entity.Usuario;
 import com.jael.minhasfinacas.model.repository.UsuarioRepository;
 import com.jael.minhasfinacas.service.UsuarioService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UsuarioServiceImpl implements UsuarioService {
 	
-	private UsuarioRepository repository;
+	@Autowired
+	private final UsuarioRepository repository;
 	
 	public UsuarioServiceImpl( UsuarioRepository repository ) {
 		this.repository = repository;
