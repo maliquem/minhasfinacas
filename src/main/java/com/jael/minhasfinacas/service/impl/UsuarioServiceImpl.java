@@ -1,11 +1,16 @@
 package com.jael.minhasfinacas.service.impl;
 
+import com.jael.minhasfinacas.exception.ErroAutenticacao;
 import com.jael.minhasfinacas.exception.RegraNegocioException;
 import com.jael.minhasfinacas.model.entity.Usuario;
 import com.jael.minhasfinacas.model.repository.UsuarioRepository;
 import com.jael.minhasfinacas.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class UsuarioServiceImpl implements UsuarioService {
@@ -19,12 +24,24 @@ public class UsuarioServiceImpl implements UsuarioService {
 	
 	@Override
 	public Usuario autenticar( String email, String senha ) {
-		return null;
+		Optional< Usuario > usuario = repository.findByEmail( email );
+		
+		if ( usuario.isEmpty() ) {
+			throw new ErroAutenticacao( "Usuário não encontrado para o email informado." );
+		}
+		
+		if ( !Objects.equals( usuario.get().getSenha(), senha ) ) {
+			throw new ErroAutenticacao( "Senha inválida." );
+		}
+		
+		return usuario.get();
 	}
 	
 	@Override
+	@Transactional
 	public Usuario salvarUsuario( Usuario usuario ) {
-		return null;
+		validarEmail( usuario.getEmail() );
+		return repository.save( usuario );
 	}
 	
 	@Override
