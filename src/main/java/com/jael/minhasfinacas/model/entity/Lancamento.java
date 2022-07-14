@@ -32,6 +32,9 @@ public class Lancamento {
 	@Column( name = "ano" )
 	private Integer ano;
 	
+	@Column( name = "descricao" )
+	private String descricao;
+	
 	@ManyToOne
 	@JoinColumn( name = "id_usuario" )
 	private Usuario usuario;
