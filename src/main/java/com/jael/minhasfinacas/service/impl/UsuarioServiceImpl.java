@@ -45,6 +45,17 @@ public class UsuarioServiceImpl implements UsuarioService {
 	}
 	
 	@Override
+	public Optional< Usuario > obterPorId( Long id ) {
+		Optional< Usuario > usuario = repository.findById( id );
+		
+		if ( usuario.isEmpty() ) {
+			throw new RegraNegocioException( "Usuário não encontrado para o ID informado." );
+		}
+		
+		return usuario;
+	}
+	
+	@Override
 	public void validarEmail( String email ) {
 		if ( repository.existsByEmail( email ) ) {
 			throw new RegraNegocioException( "Já existe um usuário cadastrado com este email." );

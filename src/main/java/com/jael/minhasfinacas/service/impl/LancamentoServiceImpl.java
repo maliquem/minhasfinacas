@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import static org.springframework.data.domain.ExampleMatcher.matching;
 
@@ -41,6 +42,18 @@ public class LancamentoServiceImpl implements LancamentoService {
 		Objects.requireNonNull( lancamento.getId() );
 		validar( lancamento );
 		return repository.save( lancamento );
+	}
+	
+	@Override
+	@Transactional
+	public Optional< Lancamento > obterPorId( Long id ) {
+		Optional< Lancamento > lancamento = repository.findById( id );
+		
+		if ( lancamento.isEmpty() ) {
+			throw new RegraNegocioException( "Lançamento não encontrado para o ID informado." );
+		}
+		
+		return lancamento;
 	}
 	
 	@Override

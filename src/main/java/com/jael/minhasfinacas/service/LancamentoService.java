@@ -4,12 +4,15 @@ import com.jael.minhasfinacas.model.entity.Lancamento;
 import com.jael.minhasfinacas.model.enums.StatusLancamento;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface LancamentoService {
 	
 	Lancamento salvar( Lancamento lancamento );
 	
 	Lancamento atualizar( Lancamento lancamento );
+	
+	Optional< Lancamento > obterPorId( Long id );
 	
 	List< Lancamento > buscar( Lancamento lancamentoFiltro );
 	

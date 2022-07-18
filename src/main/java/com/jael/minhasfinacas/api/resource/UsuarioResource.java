@@ -5,7 +5,7 @@ import com.jael.minhasfinacas.exception.ErroAutenticacao;
 import com.jael.minhasfinacas.exception.RegraNegocioException;
 import com.jael.minhasfinacas.model.entity.Usuario;
 import com.jael.minhasfinacas.service.UsuarioService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,14 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping( "/api/usuarios" )
+@RequiredArgsConstructor
 public class UsuarioResource {
 	
-	@Autowired
 	private final UsuarioService service;
-	
-	public UsuarioResource( UsuarioService service ) {
-		this.service = service;
-	}
 	
 	@PostMapping( "/autenticar" )
 	public ResponseEntity autenticar( @RequestBody UsuarioDTO dto ) {
