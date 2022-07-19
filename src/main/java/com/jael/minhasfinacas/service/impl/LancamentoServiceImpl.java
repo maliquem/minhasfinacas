@@ -3,6 +3,7 @@ package com.jael.minhasfinacas.service.impl;
 import com.jael.minhasfinacas.exception.RegraNegocioException;
 import com.jael.minhasfinacas.model.entity.Lancamento;
 import com.jael.minhasfinacas.model.enums.StatusLancamento;
+import com.jael.minhasfinacas.model.enums.TipoLancamento;
 import com.jael.minhasfinacas.model.repository.LancamentoRepository;
 import com.jael.minhasfinacas.service.LancamentoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,6 +62,22 @@ public class LancamentoServiceImpl implements LancamentoService {
 	public List< Lancamento > buscar( Lancamento lancamentoFiltro ) {
 		Example< Lancamento > example = Example.of( lancamentoFiltro, matching().withIgnoreCase().withStringMatcher( ExampleMatcher.StringMatcher.CONTAINING ) );
 		return repository.findAll( example );
+	}
+	
+	@Override
+	@Transactional( readOnly = true )
+	public BigDecimal obterSaldoPorUsuario( Long id ) {
+		BigDecimal receitas = repository.obterSaldoPorTipoLancamentoEUsuario( id, TipoLancamento.RECEITA );
+		BigDecimal despesas = repository.obterSaldoPorTipoLancamentoEUsuario( id, TipoLancamento.DESPESA );
+		
+		if ( receitas == null ) {
+			receitas = BigDecimal.ZERO;
+		}
+		
+		if ( despesas == null ) {
+			despesas = BigDecimal.ZERO;
+		}
+		return receitas.subtract( despesas );
 	}
 	
 	@Override

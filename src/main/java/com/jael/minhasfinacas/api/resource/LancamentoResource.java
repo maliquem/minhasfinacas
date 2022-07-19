@@ -1,5 +1,6 @@
 package com.jael.minhasfinacas.api.resource;
 
+import com.jael.minhasfinacas.api.dto.AtualizarStatusDTO;
 import com.jael.minhasfinacas.api.dto.LancamentoDTO;
 import com.jael.minhasfinacas.exception.RegraNegocioException;
 import com.jael.minhasfinacas.model.entity.Lancamento;
@@ -35,12 +36,7 @@ public class LancamentoResource {
 	}
 	
 	@GetMapping
-	public ResponseEntity buscar( @RequestParam( value = "descricao", required = false ) String descricao,
-	                              @RequestParam( value = "mes", required = false ) Integer mes,
-	                              @RequestParam( value = "ano", required = false ) Integer ano,
-	                              @RequestParam( value = "tipo", required = false ) String tipo,
-	                              @RequestParam( value = "status", required = false ) String status,
-	                              @RequestParam( "usuario" ) Long idUsuario ) {
+	public ResponseEntity buscar( @RequestParam( value = "descricao", required = false ) String descricao, @RequestParam( value = "mes", required = false ) Integer mes, @RequestParam( value = "ano", required = false ) Integer ano, @RequestParam( value = "tipo", required = false ) String tipo, @RequestParam( value = "status", required = false ) String status, @RequestParam( "usuario" ) Long idUsuario ) {
 		Lancamento lancamentoFiltro = new Lancamento();
 		
 		lancamentoFiltro.setDescricao( descricao );
@@ -84,6 +80,23 @@ public class LancamentoResource {
 				lancamento.setId( entidade.getId() );
 				lancamentoService.atualizar( lancamento );
 				return ResponseEntity.ok( lancamento );
+			} catch ( RegraNegocioException e ) {
+				return ResponseEntity.badRequest().body( e.getMessage() );
+			}
+		} ).orElseGet( () -> new ResponseEntity( "Lançamento não encontrado.", HttpStatus.BAD_REQUEST ) );
+	}
+	
+	@PutMapping( "/{id}/atualizar-status" )
+	public ResponseEntity atualizarStatus( @PathVariable Long id, @RequestBody AtualizarStatusDTO dto ) {
+		return lancamentoService.obterPorId( id ).map( entidade -> {
+			if ( dto.getStatus() == null ) {
+				return ResponseEntity.badRequest().body( "Não foi possível atualizar o status do lançamento. Envie um status válido." );
+			}
+			StatusLancamento statusSelecionado = StatusLancamento.valueOf( dto.getStatus() );
+			try {
+				entidade.setStatus( statusSelecionado );
+				lancamentoService.atualizar( entidade );
+				return ResponseEntity.ok( entidade );
 			} catch ( RegraNegocioException e ) {
 				return ResponseEntity.badRequest().body( e.getMessage() );
 			}
