@@ -23,10 +23,12 @@ import java.util.Optional;
 public class LancamentoResource {
 	
 	private final LancamentoService lancamentoService;
+	
 	private final UsuarioService usuarioService;
 	
 	@GetMapping( "/{id}" )
 	public ResponseEntity buscarPorId( @PathVariable Long id ) {
+		
 		try {
 			Lancamento lancamento = lancamentoService.obterPorId( id ).get();
 			return ResponseEntity.ok( lancamento );
@@ -36,15 +38,23 @@ public class LancamentoResource {
 	}
 	
 	@GetMapping
-	public ResponseEntity buscar( @RequestParam( value = "descricao", required = false ) String descricao, @RequestParam( value = "mes", required = false ) Integer mes, @RequestParam( value = "ano", required = false ) Integer ano, @RequestParam( value = "tipo", required = false ) String tipo, @RequestParam( value = "status", required = false ) String status, @RequestParam( "usuario" ) Long idUsuario ) {
+	public ResponseEntity buscar( @RequestParam( value = "descricao", required = false ) String descricao,
+	                              @RequestParam( value = "mes", required = false ) Integer mes,
+	                              @RequestParam( value = "ano", required = false ) Integer ano,
+	                              @RequestParam( value = "tipo", required = false ) String tipo,
+	                              @RequestParam( value = "status", required = false ) String status,
+	                              @RequestParam( "usuario" ) Long idUsuario ) {
+		
 		Lancamento lancamentoFiltro = new Lancamento();
 		
 		lancamentoFiltro.setDescricao( descricao );
 		lancamentoFiltro.setMes( mes );
 		lancamentoFiltro.setAno( ano );
+		
 		if ( tipo != null ) {
 			lancamentoFiltro.setTipo( TipoLancamento.valueOf( tipo ) );
 		}
+		
 		if ( status != null ) {
 			lancamentoFiltro.setStatus( StatusLancamento.valueOf( status ) );
 		}
@@ -63,6 +73,7 @@ public class LancamentoResource {
 	
 	@PostMapping
 	public ResponseEntity salvar( @RequestBody LancamentoDTO dto ) {
+		
 		try {
 			Lancamento lancamento = converter( dto );
 			Lancamento lancamentoSalvo = lancamentoService.salvar( lancamento );
@@ -74,6 +85,7 @@ public class LancamentoResource {
 	
 	@PutMapping( "/{id}" )
 	public ResponseEntity atualizar( @PathVariable Long id, @RequestBody LancamentoDTO dto ) {
+		
 		return lancamentoService.obterPorId( id ).map( entidade -> {
 			try {
 				Lancamento lancamento = converter( dto );
@@ -88,9 +100,11 @@ public class LancamentoResource {
 	
 	@PutMapping( "/{id}/atualizar-status" )
 	public ResponseEntity atualizarStatus( @PathVariable Long id, @RequestBody AtualizarStatusDTO dto ) {
+		
 		return lancamentoService.obterPorId( id ).map( entidade -> {
 			if ( dto.getStatus() == null ) {
-				return ResponseEntity.badRequest().body( "Não foi possível atualizar o status do lançamento. Envie um status válido." );
+				return ResponseEntity.badRequest()
+				                     .body( "Não foi possível atualizar o status do lançamento. Envie um status válido." );
 			}
 			StatusLancamento statusSelecionado = StatusLancamento.valueOf( dto.getStatus() );
 			try {
@@ -105,6 +119,7 @@ public class LancamentoResource {
 	
 	@DeleteMapping( "/{id}" )
 	public ResponseEntity deletar( @PathVariable Long id ) {
+		
 		try {
 			lancamentoService.deletar( lancamentoService.obterPorId( id ).get() );
 			return new ResponseEntity( HttpStatus.NO_CONTENT );
@@ -114,6 +129,7 @@ public class LancamentoResource {
 	}
 	
 	private Lancamento converter( LancamentoDTO dto ) {
+		
 		Lancamento lancamento = new Lancamento();
 		
 		lancamento.setId( dto.getId() );

@@ -1,7 +1,6 @@
 package com.jael.minhasfinacas.model.repository;
 
 import com.jael.minhasfinacas.model.entity.Usuario;
-import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +11,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith( SpringRunner.class )
 @ActiveProfiles( "test" )
@@ -35,7 +36,7 @@ public class UsuarioRepositoryTest {
 		boolean result = repository.existsByEmail( "usuario@email.com" );
 		
 		//VERIFICAÇÃO
-		Assertions.assertThat( result ).isTrue();
+		assertThat( result ).isTrue();
 	}
 	
 	@Test
@@ -44,7 +45,7 @@ public class UsuarioRepositoryTest {
 		boolean result = repository.existsByEmail( "usuario2@email.com" );
 		
 		//VERIFICAÇÃO
-		Assertions.assertThat( result ).isFalse();
+		assertThat( result ).isFalse();
 	}
 	
 	@Test
@@ -56,7 +57,7 @@ public class UsuarioRepositoryTest {
 		Usuario usuarioSalvo = repository.save( usuario );
 		
 		//VERIFICAÇÃO
-		Assertions.assertThat( usuarioSalvo.getId() ).isNotNull();
+		assertThat( usuarioSalvo.getId() ).isNotNull();
 	}
 	
 	@Test
@@ -69,7 +70,7 @@ public class UsuarioRepositoryTest {
 		Optional< Usuario > result = repository.findByEmail( "usuario@email.com" );
 		
 		//VERIFICAÇÃO
-		Assertions.assertThat( result ).isPresent();
+		assertThat( result ).isPresent();
 	}
 	
 	@Test
@@ -78,15 +79,12 @@ public class UsuarioRepositoryTest {
 		Optional< Usuario > result = repository.findByEmail( "usuario@email.com" );
 		
 		//VERIFICAÇÃO
-		Assertions.assertThat( result ).isEmpty();
+		assertThat( result ).isEmpty();
 	}
 	
 	public static Usuario criarUsuario() {
-		return Usuario
-				.builder()
-				.nome( "usuário" )
-				.email( "usuario@email.com" )
-				.senha( "senha" )
-				.build();
+		
+		return Usuario.builder().nome( "usuário" ).email( "usuario@email.com" ).senha( "senha" ).build();
 	}
+	
 }

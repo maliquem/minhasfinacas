@@ -1,5 +1,6 @@
 package com.jael.minhasfinacas.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.springframework.data.util.ProxyUtils;
 
@@ -28,19 +29,25 @@ public class Usuario {
 	private String email;
 	
 	@Column( name = "senha" )
+	@JsonIgnore
 	private String senha;
 	
 	@Override
 	public boolean equals( Object o ) {
-		if ( this == o ) return true;
-		if ( o == null || ProxyUtils.getUserClass( this ) != ProxyUtils.getUserClass( o ) )
+		
+		if ( this == o ) {
+			return true;
+		}
+		if ( o == null || ProxyUtils.getUserClass( this ) != ProxyUtils.getUserClass( o ) ) {
 			return false;
+		}
 		Usuario usuario = ( Usuario ) o;
 		return id != null && Objects.equals( id, usuario.id );
 	}
 	
 	@Override
 	public int hashCode() {
+		
 		return getClass().hashCode();
 	}
 	
