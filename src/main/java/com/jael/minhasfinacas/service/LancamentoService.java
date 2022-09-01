@@ -17,6 +17,8 @@ public interface LancamentoService {
 	
 	List< Lancamento > buscar( Lancamento lancamentoFiltro );
 	
+	List< String > buscarTodasAsDescricoesPorUsuario( Long id );
+	
 	BigDecimal obterSaldoPorUsuario( Long id );
 	
 	void deletar( Lancamento lancamento );

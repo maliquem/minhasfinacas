@@ -37,6 +37,17 @@ public class LancamentoResource {
 		}
 	}
 	
+	@GetMapping( "/descricao/{id}" )
+	public ResponseEntity obterDescricoes( @PathVariable Long id ) {
+		
+		try {
+			List< String > lancamentos = lancamentoService.buscarTodasAsDescricoesPorUsuario( id );
+			return ResponseEntity.ok( lancamentos );
+		} catch ( RegraNegocioException e ) {
+			return ResponseEntity.badRequest().body( e.getMessage() );
+		}
+	}
+	
 	@GetMapping
 	public ResponseEntity buscar( @RequestParam( value = "descricao", required = false ) String descricao,
 	                              @RequestParam( value = "mes", required = false ) Integer mes,

@@ -26,12 +26,14 @@ public class LancamentoServiceImpl implements LancamentoService {
 	private final LancamentoRepository repository;
 	
 	public LancamentoServiceImpl( LancamentoRepository repository ) {
+		
 		this.repository = repository;
 	}
 	
 	@Override
 	@Transactional
 	public Lancamento salvar( Lancamento lancamento ) {
+		
 		validar( lancamento );
 		lancamento.setStatus( StatusLancamento.PENDENTE );
 		return repository.save( lancamento );
@@ -40,6 +42,7 @@ public class LancamentoServiceImpl implements LancamentoService {
 	@Override
 	@Transactional
 	public Lancamento atualizar( Lancamento lancamento ) {
+		
 		Objects.requireNonNull( lancamento.getId() );
 		validar( lancamento );
 		return repository.save( lancamento );
@@ -48,6 +51,7 @@ public class LancamentoServiceImpl implements LancamentoService {
 	@Override
 	@Transactional
 	public Optional< Lancamento > obterPorId( Long id ) {
+		
 		Optional< Lancamento > lancamento = repository.findById( id );
 		
 		if ( lancamento.isEmpty() ) {
@@ -60,13 +64,29 @@ public class LancamentoServiceImpl implements LancamentoService {
 	@Override
 	@Transactional
 	public List< Lancamento > buscar( Lancamento lancamentoFiltro ) {
-		Example< Lancamento > example = Example.of( lancamentoFiltro, matching().withIgnoreCase().withStringMatcher( ExampleMatcher.StringMatcher.CONTAINING ) );
+		
+		Example< Lancamento > example = Example.of( lancamentoFiltro, matching().withIgnoreCase()
+		                                                                        .withStringMatcher(
+				                                                                        ExampleMatcher.StringMatcher.CONTAINING ) );
 		return repository.findAll( example );
+	}
+	@Override
+	@Transactional
+	public List< String > buscarTodasAsDescricoesPorUsuario( Long id ) {
+		
+		List< String > listaDescricao = repository.obterDescricaoPorIdUsuario( id );
+		
+		if ( listaDescricao.isEmpty() ) {
+			throw new RegraNegocioException( "Nenhuma descrição de lançamento encontrada." );
+		}
+		
+		return listaDescricao;
 	}
 	
 	@Override
 	@Transactional( readOnly = true )
 	public BigDecimal obterSaldoPorUsuario( Long id ) {
+		
 		BigDecimal receitas = repository.obterSaldoPorTipoLancamentoEUsuario( id, TipoLancamento.RECEITA );
 		BigDecimal despesas = repository.obterSaldoPorTipoLancamentoEUsuario( id, TipoLancamento.DESPESA );
 		
@@ -82,6 +102,7 @@ public class LancamentoServiceImpl implements LancamentoService {
 	
 	@Override
 	public void deletar( Lancamento lancamento ) {
+		
 		Objects.requireNonNull( lancamento.getId() );
 		repository.delete( lancamento );
 	}
@@ -89,12 +110,14 @@ public class LancamentoServiceImpl implements LancamentoService {
 	@Override
 	@Transactional
 	public void atualizarStatus( Lancamento lancamento, StatusLancamento status ) {
+		
 		lancamento.setStatus( status );
 		atualizar( lancamento );
 	}
 	
 	@Override
 	public void validar( Lancamento lancamento ) {
+		
 		if ( lancamento.getDescricao() == null || lancamento.getDescricao().trim().equals( "" ) ) {
 			throw new RegraNegocioException( "Informe uma Descrição válida." );
 		}
@@ -119,4 +142,5 @@ public class LancamentoServiceImpl implements LancamentoService {
 			throw new RegraNegocioException( "Informe um Tipo de Lançamento." );
 		}
 	}
+	
 }
