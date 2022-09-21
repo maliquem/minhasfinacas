@@ -35,7 +35,6 @@ public class LancamentoServiceImpl implements LancamentoService {
 	public Lancamento salvar( Lancamento lancamento ) {
 		
 		validar( lancamento );
-		lancamento.setStatus( StatusLancamento.PENDENTE );
 		return repository.save( lancamento );
 	}
 	
@@ -140,6 +139,10 @@ public class LancamentoServiceImpl implements LancamentoService {
 		
 		if ( lancamento.getTipo() == null ) {
 			throw new RegraNegocioException( "Informe um Tipo de Lançamento." );
+		}
+		
+		if ( lancamento.getStatus() == null ) {
+			throw new RegraNegocioException( "Informe um Status de Lançamento." );
 		}
 	}
 	
