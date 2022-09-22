@@ -257,17 +257,17 @@ public class LancamentoServiceTest {
 		lancamentoDespesa.setId( 2L );
 		lancamentoDespesa.setTipo( TipoLancamento.DESPESA );
 		lancamentoDespesa.setValor( BigDecimal.valueOf( 200 ) );
-		when( repository.obterSaldoPorTipoLancamentoEUsuario( 1L, TipoLancamento.RECEITA ) ).thenReturn(
+		when( repository.obterSaldoPorTipoLancamentoEUsuarioEStatus( 1L, TipoLancamento.RECEITA ) ).thenReturn(
 				lancamentoReceita.getValor() );
-		when( repository.obterSaldoPorTipoLancamentoEUsuario( 1L, TipoLancamento.DESPESA ) ).thenReturn(
+		when( repository.obterSaldoPorTipoLancamentoEUsuarioEStatus( 1L, TipoLancamento.DESPESA ) ).thenReturn(
 				lancamentoDespesa.getValor() );
 		
 		//AÇÃO
 		BigDecimal saldoPorUsuario = service.obterSaldoPorUsuario( lancamentoDespesa.getUsuario().getId() );
 		
 		//VERIFICAÇÃO
-		verify( repository, times( 1 ) ).obterSaldoPorTipoLancamentoEUsuario( 1L, TipoLancamento.RECEITA );
-		verify( repository, times( 1 ) ).obterSaldoPorTipoLancamentoEUsuario( 1L, TipoLancamento.DESPESA );
+		verify( repository, times( 1 ) ).obterSaldoPorTipoLancamentoEUsuarioEStatus( 1L, TipoLancamento.RECEITA );
+		verify( repository, times( 1 ) ).obterSaldoPorTipoLancamentoEUsuarioEStatus( 1L, TipoLancamento.DESPESA );
 		assertThat( saldoPorUsuario ).isEqualTo( BigDecimal.valueOf( 200 ) );
 	}
 	
